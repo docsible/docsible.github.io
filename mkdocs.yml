@@ -1,0 +1,57 @@
+site_name: docsible
+repo_url: https://github.com/docsible/docsible
+repo_name: docsible/docsible
+
+theme:
+  name: material
+  highlightjs: true
+  custom_dir: theme
+  color_mode: slate
+  features:
+    - navigation.tabs
+    - navigation.footer
+    - navigation.path
+
+
+  user_color_mode_toggle: true
+  font:
+    text: Inter
+  palette:
+    - scheme: slate
+      primary: black
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+    - scheme: default
+      primary: white
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+nav:
+  - Documentation: documentation.md
+  - Overview: overview.md
+  - CLI: cli.md
+  - Security: security.md
+  - Installation: installation.md
+  - Build: build.md
+  - Learn:
+      - Templating: learn/templating.md
+  - Examples:
+      - Github/Gitlab hosted: examples.md
+      - Role: examples/role.md
+      - Collection: examples/collection.md
+
+extra_css:
+  - assets/css/custom.css
+extra_javascript:
+  - assets/js/custom.js
+
+copyright: "Copyright &copy; 2025 Lucian BLETAN"
+
+extra:
+  generator: false
+  social:
+    - icon: material/head-question
+      link: /about
+      name: About

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+    <title>Docsible - DevOps documentation automation for Ansible</title>
+    <meta name="description" content="Docsible is a CLI tool that generates clean, human-friendly documentation for Ansible roles and collections. Built for DevOps workflows." />
+    <meta name="keywords" content="ansible, devops, automation, documentation, markdown, jinja2, cli tools, ansible role, ansible collection, readme generator, ci/cd, infrastructure as code, ansible documentation tool, mkdocs, python devops tools, infrastructure documentation" />
+    <meta name="author" content="Lucian BLETAN" />
+  
+    <!-- Open Graph Meta Tags (for sharing on social media) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Docsible - DevOps-friendly documentation generator for Ansible" />
+    <meta property="og:description" content="Generate and maintain clean documentation from Ansible roles, collections and playbooks. No more outdated README.md files." />
+    <meta property="og:url" content="https://docsible.github.io/" />
+    <meta property="og:image" content="..." />
+  
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Docsible - Automated Ansible documentation for DevOps" />
+    <meta name="twitter:description" content="A CLI tool to generate structured, markdown documentation from your Ansible codebase. No more manual README writing." />
+    <meta name="twitter:image" content="..." />
+    <meta name="twitter:creator" content="@lbletan" />
+  
+    <!-- Canonical -->
+    <link rel="canonical" href="https://docsible.github.io/" />
+  
+    <!-- Favicon -->
+    <link rel="icon" href="/assets/favicon.ico" type="image/x-icon" />
+  
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <style>
+        /* Theme Variables */
+        :root {
+            --bg-color: rgb(0, 0, 0);
+            --text-color: #fff;
+            --tooltip-bg: rgba(255, 255, 255, 0.8);
+            --tooltip-text: #000;
+        }
+
+        body.light-mode {
+            --bg-color: #fff;
+            --text-color: #000;
+            --tooltip-bg: rgba(0, 0, 0, 0.8);
+            --tooltip-text: #fff;
+        }
+
+        /* Global Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        .theme-switch-wrapper {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .theme-switch {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .theme-switch input {
+            display: none;
+        }
+
+        .security-notice {
+            font-family: 'Inter', sans-serif;
+            margin: 20px;
+            margin-top: 50px;
+            padding: 10px 20px;
+            border: 2px solid #ffffff2e;
+            border-radius: 4px;
+            max-width: 90%;
+            font-size: 1rem;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .animation-content {
+            font-family: 'Inter', sans-serif;
+            margin: 20px;
+            margin-top: 50px;
+            padding-bottom: 50px;
+
+            max-width: 90%;
+            font-size: 1rem;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .ansible-animation {
+            border: 2px solid #ffffff2e;
+            border-radius: 4px;
+            width: 500px;
+            max-width: 100ch;
+            height: 50px;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Share Tech Mono', monospace;
+            padding: 0 10px;
+            margin: 0 auto 1rem auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        h1.docsible {
+            font-size: 5rem;
+            letter-spacing: 0.5rem;
+            margin: 0;
+            margin-top: -100px;
+            font-weight: normal;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .letter {
+            position: relative;
+            margin: 0 0.2rem;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .letter:hover {
+            transform: scale(1.2);
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .letter:hover::after {
+                content: attr(data-tooltip);
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: var(--tooltip-bg);
+                color: var(--tooltip-text);
+                padding: 4px 8px;
+                border-radius: 4px;
+                white-space: nowrap;
+                margin-top: 8px;
+                pointer-events: none;
+                font-size: 1rem;
+                z-index: 10;
+            }
+        }
+
+        .desktop-letter {
+            display: inline;
+        }
+
+        .mobile-word {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            h1.docsible {
+                display: block;
+                font-size: 3rem;
+                letter-spacing: normal;
+                text-align: left;
+                width: 100%;
+                padding: 0 1em;
+                margin-top: -100px;
+            }
+
+            .letter {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                margin: 15px 0;
+            }
+
+            .desktop-letter {
+                display: none;
+            }
+
+            .mobile-word {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                margin: -13px;
+                margin-left: 20px;
+            }
+
+            .mobile-first-letter {
+                display: inline-block;
+                /* width: 0.80em; */
+                text-align: center;
+                font-weight: bold;
+            }
+
+            .mobile-rest {
+                display: inline-block;
+                font-size: 0.8em;
+                line-height: 1.2;
+                margin-bottom: -8px;
+                color: #bdbbaf;
+            }
+
+        }
+
+        @media (max-width: 480px) {
+            h1.docsible {
+                font-size: 2.5rem;
+            }
+
+            .ansible-animation {
+                width: 350px;
+            }
+        }
+
+        .letter,
+        .theme-switch,
+        a {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .svg-icon {
+            width: 1.8rem;
+            height: 1.8rem;
+            transition: transform 0.3s ease;
+            color: var(--text-color);
+            display: inline-block;
+        }
+
+        #sun-icon,
+        #moon-icon {
+            display: none;
+        }
+
+        body.light-mode #moon-icon {
+            display: inline-block;
+        }
+
+        body.dark-mode #sun-icon {
+            display: inline-block;
+        }
+
+
+
+
+
+        .task-container {
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 100ch;
+        }
+
+        .task-line {
+            height: 25px;
+            line-height: 25px;
+            white-space: nowrap;
+            text-align: left;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .task-line.play {
+            color: #bdbbaf;
+        }
+
+        .task-line.task {
+            color: #bdbbaf;
+        }
+
+        .task-line.ok {
+            color: rgb(72, 107, 0);
+        }
+
+        .task-line.fatal {
+            color: rgb(163, 0, 0);
+            font-weight: bold;
+        }
+
+        .task-line.changed {
+            color: rgb(121, 86, 0);
+        }
+    </style>
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "Docsible",
+          "url": "https://docsible.github.io",
+          "author": {
+            "@type": "Person",
+            "name": "Lucian BLETAN"
+          },
+          "description": "Docsible is a CLI-based tool to generate documentation from Ansible roles and collections.",
+          "applicationCategory": "DeveloperTool",
+          "operatingSystem": "Linux, macOS, Windows",
+          "programmingLanguage": "Python",
+          "softwareVersion": "1.0.0",
+          "license": "https://opensource.org/licenses/MIT"
+        }
+        </script>
+    <script>
+        if ("ontouchstart" in window || navigator.maxTouchPoints > 0) {
+            document.documentElement.classList.add("touch");
+        }
+    </script>
+</head>
+
+<body class="dark-mode">
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="theme-toggle">
+            <input type="checkbox" id="theme-toggle" aria-label="Toggle theme" />
+            <span class="svg-icon" id="sun-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
+                </svg>
+
+            </span>
+            <span class="svg-icon" id="moon-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+                </svg>
+            </span>
+        </label>
+    </div>
+
+    <!-- Security Notice -->
+    <div class="security-notice">
+        <p>
+            <strong style="color:#66bb6a">Security Notice:</strong> Download docsible only from the official GitHub
+            repository or via pip.
+        </p>
+    </div>
+
+
+
+    <!-- Main Content: Landing Page -->
+    <div class="main-content">
+        <h1 class="docsible">
+            <a href="/documentation/" class="letter"
+                data-description="Documentation: Comprehensive guides and reference materials for using docsible."
+                data-tooltip="Documentation">
+                <span class="desktop-letter">D</span>
+                <span class="mobile-word">
+                    <span class="mobile-first-letter">D</span>
+                    <span class="mobile-rest">ocumentation</span>
+                </span>
+            </a>
+            <a href="/overview/" class="letter" data-description="Overview: A quick summary of what docsible offers."
+                data-tooltip="Overview">
+                <span class="desktop-letter">O</span>
+                <span class="mobile-word">
+                    <span class="mobile-first-letter">O</span>
+                    <span class="mobile-rest">verview</span>
+                </span>
+            </a>
+            <a href="/cli/" class="letter"
+                data-description="CLI: Command‑line interface to auto‑generate docs effortlessly." data-tooltip="CLI">
+                <span class="desktop-letter">C</span>
+                <span class="mobile-word">
+                    <span class="mobile-first-letter">C</span>
+                    <span class="mobile-rest">LI</span>
+                </span>
+            </a>
+            <a href="/security/" class="letter" data-description="Security: Best practices to keep you safe."
+                data-tooltip="Security">
+                <span class="desktop-letter">S</span>
+                <span class="mobile-word">
+                    <span class="mobile-first-letter">S</span>
+                    <span class="mobile-rest">ecurity</span>
+                </span>
+            </a>
+            <a href="/installation/" class="letter" data-description="Installation: Step‑by‑step guide."
+                data-tooltip="Installation">
+                <span class="desktop-letter">I</span>
+                <span class="mobile-word">
+                    <span class="mobile-first-letter">I</span>
+                    <span class="mobile-rest">nstallation</span>
+                </span>
+            </a>
+            <a href="/build/" class="letter" data-description="Build: How to compile or build documentation projects."
+                data-tooltip="Build">
+                <span class="desktop-letter">B</span>
+                <span class="mobile-word">
+                    <span class="mobile-first-letter">B</span>
+                    <span class="mobile-rest">uild</span>
+                </span>
+            </a>
+            <a href="/learn/templating/" class="letter"
+                data-description="Learn: Resources and tutorials to master docsible." data-tooltip="Learn">
+                <span class="desktop-letter">L</span>
+                <span class="mobile-word">
+                    <span class="mobile-first-letter">L</span>
+                    <span class="mobile-rest">earn</span>
+                </span>
+            </a>
+            <a href="/examples/" class="letter"
+                data-description="Examples: Practical examples and use cases to get started." data-tooltip="Examples">
+                <span class="desktop-letter">E</span>
+                <span class="mobile-word">
+                    <span class="mobile-first-letter">E</span>
+                    <span class="mobile-rest">xamples</span>
+                </span>
+            </a>
+        </h1>
+    </div>
+
+
+    <div class="animation-content">
+        <div id="ansible-animation" class="ansible-animation">
+            <div id="task-container" class="task-container">
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const DEBUG_MODE = false;
+
+        function logDebug(...args) {
+            if (DEBUG_MODE) console.log('[🌗 Docsible Debug]', ...args);
+        }
+
+        function getStoredScheme() {
+            try {
+                const raw = localStorage.getItem('/.__palette');
+                logDebug('Raw palette:', raw);
+                if (!raw) return 'dark';
+                const palette = JSON.parse(raw);
+                const scheme = palette?.index === 1 ? 'light' : 'dark';
+                logDebug('Parsed scheme:', scheme);
+                return scheme;
+            } catch (e) {
+                logDebug('Error parsing palette:', e);
+                return 'dark';
+            }
+        }
+
+        function setMkDocsPalette(scheme) {
+            const isDark = scheme === 'dark';
+            const palette = {
+                index: isDark ? 0 : 1,
+                color: {
+                    media: "",
+                    scheme: isDark ? "slate" : "default",
+                    primary: "indigo",
+                    accent: "indigo"
+                }
+            };
+            localStorage.setItem('/.__palette', JSON.stringify(palette));
+            logDebug('Saved palette to localStorage:', palette);
+        }
+
+        function applyBodyClass(scheme) {
+            document.body.classList.remove('light-mode', 'dark-mode');
+            document.body.classList.add(`${scheme}-mode`);
+            document.documentElement.classList.remove('light-mode', 'dark-mode');
+            document.documentElement.classList.add(`${scheme}-mode`);
+            logDebug('Applied body/documentElement class:', `${scheme}-mode`);
+        }
+
+        const initialScheme = getStoredScheme();
+        applyBodyClass(initialScheme);
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const toggleSwitch = document.getElementById('theme-toggle');
+            logDebug('DOMContentLoaded - toggle switch found:', !!toggleSwitch);
+
+            if (toggleSwitch) {
+                toggleSwitch.checked = initialScheme === 'light';
+                logDebug('Set toggle checked:', toggleSwitch.checked);
+
+                toggleSwitch.addEventListener('change', () => {
+                    const scheme = toggleSwitch.checked ? 'light' : 'dark';
+                    logDebug('Toggle changed:', scheme);
+                    applyBodyClass(scheme);
+                    setMkDocsPalette(scheme);
+                });
+            }
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                const scheme = getStoredScheme();
+                logDebug('Visibility change — reapplying scheme:', scheme);
+                applyBodyClass(scheme);
+                const toggle = document.getElementById('theme-toggle');
+                if (toggle) {
+                    toggle.checked = scheme === 'light';
+                    logDebug('Synced toggle on visibility:', toggle.checked);
+                }
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const tasks = [
+                'PLAY [initialize control plane for staging mesh]',
+                'TASK [load inventory from edge.discovery.handlers]',
+                'ok: [node-a1]',
+                'TASK [configure etcd cluster]',
+                'changed: [node-a1]',
+                'TASK [bootstrap message bus]',
+                'ok: [node-a1]',
+
+                'PLAY [provision service mesh nodes]',
+                'TASK [install container runtime from core.platform.docker]',
+                'changed: [node-b3]',
+                'TASK [pull base image for edge-processor]',
+                'ok: [node-b3]',
+                'TASK [enable overlayfs driver]',
+                'ok: [node-b3]',
+
+                'PLAY [configure secure overlay network]',
+                'TASK [generate certs using crypto.vault.ca]',
+                'changed: [node-c9]',
+                'TASK [apply firewall baseline]',
+                'ok: [node-c9]',
+                'TASK [establish ipsec tunnels]',
+                'changed: [node-c9]',
+
+                'PLAY [finalize workload rollout]',
+                'TASK [register services with internal registry]',
+                'ok: [node-a1]',
+                'TASK [run post-deploy checks]',
+                'changed: [node-a1]',
+                'TASK [emit metrics to observability pipeline]',
+                'ok: [node-a1]'
+            ];
+
+            let currentIndex = 0;
+            const container = document.getElementById("task-container");
+
+            function createTaskLine(text) {
+                const div = document.createElement("div");
+                div.className = "task-line";
+                div.textContent = text;
+                applyColor(div, text);
+                return div;
+            }
+
+            function applyColor(el, text) {
+                el.classList.remove("play", "task", "ok", "fatal", "changed");
+                if (text.startsWith("PLAY")) el.classList.add("play");
+                else if (text.startsWith("TASK")) el.classList.add("task");
+                else if (text.startsWith("ok:")) el.classList.add("ok");
+                else if (text.startsWith("fatal:")) el.classList.add("fatal");
+                else if (text.startsWith("changed:")) el.classList.add("changed");
+            }
+
+            container.appendChild(createTaskLine(tasks[currentIndex++ % tasks.length]));
+            container.appendChild(createTaskLine(tasks[currentIndex++ % tasks.length]));
+
+            function scrollTasks() {
+                container.style.transform = "translateY(-25px)";
+                container.addEventListener("transitionend", () => {
+                    container.removeChild(container.firstElementChild);
+                    const newLine = createTaskLine(tasks[currentIndex++ % tasks.length]);
+                    container.appendChild(newLine);
+                    container.style.transition = "none";
+                    container.style.transform = "translateY(0)";
+                    void container.offsetWidth;
+                    container.style.transition = "transform 0.3s ease";
+                }, { once: true });
+            }
+
+            setInterval(scrollTasks, 1000);
+        });
+
+    </script>
+
+</body>
+
+</html>
