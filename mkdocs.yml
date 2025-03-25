@@ -47,7 +47,7 @@ extra_css:
 extra_javascript:
   - assets/js/custom.js
 
-copyright: "Copyright &copy; 2025 Lucian BLETAN"
+copyright: "Built with 💻, ☕, and a dash of ❤️ by Lucian BLETAN - © 2025"
 
 extra:
   generator: false
