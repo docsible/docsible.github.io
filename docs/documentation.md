@@ -9,7 +9,7 @@ hide:
 
 Let's rewind to 1985. Somewhere in a dusty basement, a sysadmin is grumbling at a blinking green terminal. He mutters the eternal words that would echo through tech culture forever:
 
-> "RTF." *(Read The... Fine Manual)*
+> "RTFM." *(Read The... Fine Manual)*
 
 Back then, manuals were thick paper bricks shipped in cardboard boxes. You didn't "Google" errors you deciphered them. Documentation wasn't optional it was survival.
 
