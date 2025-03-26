@@ -112,7 +112,7 @@
             max-width: 100ch;
             height: 50px;
             overflow: hidden;
-            background: #000;
+            background: var(--bg-color);
             font-family: 'Share Tech Mono', monospace;
             padding: 0 10px;
             margin: 0 auto 1rem auto;
@@ -268,10 +268,6 @@
             display: inline-block;
         }
 
-
-
-
-
         .task-container {
             transition: transform 0.3s ease;
             display: flex;
@@ -291,11 +287,11 @@
         }
 
         .task-line.play {
-            color: #bdbbaf;
+            color: var(--text-color);
         }
 
         .task-line.task {
-            color: #bdbbaf;
+            color: var(--text-color);
         }
 
         .task-line.ok {
